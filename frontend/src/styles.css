@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: #f7faf8;
+  color: #10212f;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+textarea,
+input {
+  outline: none;
+}
+
+.a4-preview {
+  aspect-ratio: 210 / 297;
+  background: white;
+  box-shadow: 0 18px 60px rgba(16, 33, 47, 0.18);
+}
