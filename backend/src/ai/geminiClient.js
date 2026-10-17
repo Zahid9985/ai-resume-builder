@@ -15,7 +15,6 @@ async function generateJsonFromGemini(prompt) {
     model: env.GEMINI_MODEL,
     contents: prompt,
     config: {
-      temperature: 0.2,
       responseMimeType: 'application/json'
     }
   });

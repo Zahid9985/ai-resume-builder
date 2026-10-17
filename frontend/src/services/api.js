@@ -39,5 +39,16 @@ export function getErrorMessage(error) {
   if (error?.code === 'ERR_NETWORK' || (error?.request && !error?.response)) {
     return 'Cannot reach the API. Start the backend on port 5000, restart the frontend on port 5173, and try again.';
   }
-  return error?.response?.data?.error?.message || error?.message || 'Something went wrong.';
+  const apiError = error?.response?.data?.error;
+  if (apiError?.debug) return apiError.debug;
+  const fieldErrors = apiError?.details?.fieldErrors;
+  if (fieldErrors) {
+    const firstError = Object.entries(fieldErrors).find(([, messages]) => messages?.length)?.[0];
+    if (firstError) {
+      const message = fieldErrors[firstError][0];
+      const fieldName = firstError === 'jobDescription' ? 'Role description' : firstError === 'resumeText' ? 'Resume text' : firstError;
+      return `${fieldName}: ${message}`;
+    }
+  }
+  return apiError?.message || error?.message || 'Something went wrong.';
 }

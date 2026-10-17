@@ -11,6 +11,9 @@ export default function HomePage({ workflow, updateWorkflow, onComplete }) {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const resumeLength = workflow.resumeText.trim().length;
+  const jobDescriptionLength = workflow.jobDescription.trim().length;
+  const canAnalyze = resumeLength >= 100 && jobDescriptionLength >= 80;
 
   async function handleFile(file) {
     if (!file || uploading) return;
@@ -35,6 +38,14 @@ export default function HomePage({ workflow, updateWorkflow, onComplete }) {
   }
 
   async function handleAnalyze() {
+    if (resumeLength < 100) {
+      setError('Upload a resume with at least 100 characters of readable text.');
+      return;
+    }
+    if (jobDescriptionLength < 80) {
+      setError('Add more detail to the role description. It needs at least 80 characters.');
+      return;
+    }
     setError('');
     setLoading(true);
     try {
@@ -114,10 +125,13 @@ export default function HomePage({ workflow, updateWorkflow, onComplete }) {
           className="folio-textarea mt-2 w-full resize-y p-4 text-sm leading-6 text-slate-800 focus:border-river focus:ring-2 focus:ring-river/20"
           placeholder="Paste the job description here. The details help us find the right emphasis."
         />
+        <p className={`folio-character-count ${jobDescriptionLength < 80 ? 'folio-character-count-short' : ''}`} aria-live="polite">
+          {jobDescriptionLength} / 80 characters minimum
+        </p>
 
         {error ? <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">{error}</p> : null}
 
-        <Button onClick={handleAnalyze} disabled={loading || !workflow.resumeText || !workflow.jobDescription} className="mt-5 w-full">
+        <Button onClick={handleAnalyze} disabled={loading || !canAnalyze} className="mt-5 w-full">
           {loading ? <Loader2 className="animate-spin" size={18} /> : <ScanSearch size={18} />}
           Analyze Resume
         </Button>

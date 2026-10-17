@@ -6,6 +6,14 @@ function notFoundHandler(req, res, next) {
 
 function errorHandler(error, req, res, next) {
   const statusCode = error.statusCode || 500;
+  if (statusCode >= 500) {
+    console.error('[API error]', {
+      method: req.method,
+      path: req.originalUrl,
+      statusCode,
+      message: error.message
+    });
+  }
   const payload = {
     success: false,
     error: {
