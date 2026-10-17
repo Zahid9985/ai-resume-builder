@@ -2,18 +2,21 @@ import { useRef, useState } from 'react';
 import { ArrowDown, Check, FileUp, Loader2, ScanSearch } from 'lucide-react';
 import Button from '../components/Button.jsx';
 import Panel from '../components/Panel.jsx';
+import ResumeUploadLoader from '../components/ResumeUploadLoader.jsx';
 import { analyzeResume, getErrorMessage, uploadResume } from '../services/api.js';
 
 export default function HomePage({ workflow, updateWorkflow, onComplete }) {
   const fileRef = useRef(null);
   const [fileName, setFileName] = useState(workflow.originalFileName);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
   async function handleFile(file) {
-    if (!file) return;
+    if (!file || uploading) return;
     setError('');
-    setLoading(true);
+    const startedAt = Date.now();
+    setUploading(true);
     try {
       const uploaded = await uploadResume(file);
       setFileName(uploaded.originalFileName);
@@ -25,7 +28,9 @@ export default function HomePage({ workflow, updateWorkflow, onComplete }) {
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
-      setLoading(false);
+      const visibleFor = Date.now() - startedAt;
+      if (visibleFor < 4000) await new Promise((resolve) => window.setTimeout(resolve, 4000 - visibleFor));
+      setUploading(false);
     }
   }
 
@@ -48,6 +53,8 @@ export default function HomePage({ workflow, updateWorkflow, onComplete }) {
   }
 
   return (
+    <>
+    {uploading && <ResumeUploadLoader />}
     <main className="folio-main mx-auto grid max-w-7xl gap-12 px-5 py-10 lg:grid-cols-[0.9fr_1.1fr] lg:py-16">
       <section className="folio-intro flex flex-col justify-center">
         <p className="folio-kicker"><span className="folio-kicker-dot" /> YOUR NEXT CHAPTER, WELL EDITED</p>
@@ -76,15 +83,18 @@ export default function HomePage({ workflow, updateWorkflow, onComplete }) {
           onDragOver={(event) => event.preventDefault()}
           onDrop={(event) => {
             event.preventDefault();
+            if (uploading) return;
             handleFile(event.dataTransfer.files?.[0]);
           }}
           className="folio-dropzone flex min-h-48 cursor-pointer flex-col items-center justify-center p-6 text-center transition"
-          onClick={() => fileRef.current?.click()}
+          onClick={() => !uploading && fileRef.current?.click()}
+          aria-busy={uploading}
         >
           <input
             ref={fileRef}
             className="hidden"
             type="file"
+            disabled={uploading}
             accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
             onChange={(event) => handleFile(event.target.files?.[0])}
           />
@@ -113,5 +123,6 @@ export default function HomePage({ workflow, updateWorkflow, onComplete }) {
         </Button>
       </Panel>
     </main>
+    </>
   );
 }

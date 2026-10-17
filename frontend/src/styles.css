@@ -101,6 +101,25 @@ body {
 .folio-preview-size { border: 1px solid #d8d2c5; padding: 5px 8px; color: #89887c; font-size: 9px; letter-spacing: .1em; }
 .folio-builder .a4-preview { border: 1px solid #e3dfd5; }
 
+.folio-upload-overlay { position: fixed; z-index: 1000; inset: 0; display: grid; place-items: center; background: rgba(243,240,233,.56); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); animation: folio-overlay-in .18s ease-out both; }
+.folio-upload-dialog { display: flex; min-width: 280px; flex-direction: column; align-items: center; border: 1px solid #e1ddd2; border-radius: 3px; background: #fbfaf6; padding: 27px 34px 24px; box-shadow: 0 20px 70px rgba(43,42,33,.15); }
+.folio-book { position: relative; width: 8em; height: 6em; padding: .25em; perspective: 37.5em; transform-style: preserve-3d; border-radius: .2em; background: #b84b35; box-shadow: 0 .25em .5em rgba(0,0,0,.22), 0 0 0 .2em #a43d2a inset; animation: folio-cover 2.4s ease-in-out infinite; }
+.folio-book-page { position: absolute; top: .25em; left: .25em; width: calc(50% - .25em); height: calc(100% - .5em); transform-origin: 100% 50%; background: linear-gradient(90deg,#fffefa 87%,#e3ded2); box-shadow: inset 1px 0 rgba(91,82,65,.08); backface-visibility: visible; }
+.folio-book-page-1 { animation: folio-page-turn 2.4s ease-in-out infinite; }
+.folio-book-page-2 { background: repeating-linear-gradient(#c7c0b3 0 .08em,transparent .08em .32em),linear-gradient(90deg,#fffefa 87%,#e3ded2); background-position: center; background-size: 2.5em 3.9em,100% 100%; background-repeat: no-repeat; animation: folio-page-turn 2.4s .16s ease-in-out infinite; }
+.folio-book-page-3 { background: repeating-linear-gradient(#c7c0b3 0 .08em,transparent .08em .32em),linear-gradient(90deg,#fffefa 87%,#e3ded2); background-position: center; background-size: 2.5em 3.9em,100% 100%; background-repeat: no-repeat; animation: folio-page-turn 2.4s .32s ease-in-out infinite; }
+.folio-book-page-4 { animation: folio-page-turn 2.4s .48s ease-in-out infinite; }
+.folio-book-page-5 { animation: folio-page-turn 2.4s .64s ease-in-out infinite; }
+.folio-book-shadow { position: absolute; z-index: 6; top: calc(100% - .25em); left: .25em; width: calc(50% - .25em); height: 3.75em; background: linear-gradient(-45deg,transparent 50%,rgba(36,42,36,.3) 50%); filter: blur(.25em); transform: scaleY(0); transform-origin: 100% 0; animation: folio-page-shadow 2.4s ease-in-out infinite; }
+.folio-upload-title { margin-top: 21px; color: #30372f; font: 400 23px/1.2 Georgia, "Times New Roman", serif; }
+.folio-upload-caption { margin-top: 6px; color: #77796e; font-size: 11px; }
+@keyframes folio-page-turn { 0%,10% { transform: translate3d(0,0,1px) rotateY(0); } 25%,35% { transform: translate3d(0,0,1px) rotateY(180deg); } 50% { transform: translate3d(0,0,1px) rotateY(180deg); } 65%,75% { transform: translate3d(0,0,1px) rotateY(180deg); } 90%,100% { transform: translate3d(0,0,1px) rotateY(0); } }
+@keyframes folio-page-shadow { 0%,10%,20%,30%,40% { transform: translate3d(0,0,1px) scaleY(0) rotateY(0); } 5%,15%,25%,35%,45%,55%,65%,75%,85%,95% { transform: translate3d(0,0,1px) scaleY(.2) rotateY(90deg); } 50%,100% { transform: translate3d(0,0,1px) scaleY(0) rotateY(180deg); } }
+@keyframes folio-cover { 0%,100% { background-color: #b84b35; } 45%,55% { background-color: #a43d2a; } }
+@keyframes folio-book-shadow { 0%,100% { transform: scaleX(.76); opacity: .55; } 50% { transform: scaleX(1); opacity: .8; } }
+@keyframes folio-overlay-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .folio-upload-overlay { animation: none; } .folio-book, .folio-book-page, .folio-book-shadow { animation-duration: 6s; } }
+
 textarea,
 input {
   outline: none;

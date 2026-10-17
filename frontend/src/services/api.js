@@ -1,16 +1,15 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
   timeout: 120000
 });
 
 export async function uploadResume(file) {
   const formData = new FormData();
   formData.append('resume', file);
-  const response = await api.post('/resumes/upload', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  });
+  // Let the browser set multipart/form-data with its boundary parameter.
+  const response = await api.post('/resumes/upload', formData);
   return response.data.data;
 }
 
@@ -37,5 +36,8 @@ export async function downloadPdf(payload) {
 }
 
 export function getErrorMessage(error) {
+  if (error?.code === 'ERR_NETWORK' || (error?.request && !error?.response)) {
+    return 'Cannot reach the API. Start the backend on port 5000, restart the frontend on port 5173, and try again.';
+  }
   return error?.response?.data?.error?.message || error?.message || 'Something went wrong.';
 }
