@@ -34,23 +34,25 @@ export default function BuilderPage({ workflow, updateWorkflow, onBack }) {
   }
 
   return (
-    <main className="mx-auto grid max-w-7xl gap-6 px-5 py-8 xl:grid-cols-[0.9fr_1.1fr]">
+    <main className="folio-main folio-builder mx-auto grid max-w-7xl gap-6 px-5 py-8 lg:py-12 xl:grid-cols-[0.88fr_1.12fr]">
       <section>
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="folio-page-heading mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.22em] text-river">Resume builder</p>
-            <h2 className="text-3xl font-black text-ink">Edit and export your tailored version</h2>
+            <p className="folio-kicker"><span className="folio-kicker-dot" /> YOUR EDIT DESK <span className="folio-heading-step">03 / 03</span></p>
+            <h2 className="folio-page-title mt-3">Make the draft yours.</h2>
+            <p className="folio-page-subtitle mt-2">Review every detail before it leaves your desk.</p>
           </div>
-          <Button variant="secondary" onClick={onBack}><ArrowLeft size={18} /> Analysis</Button>
+          <Button variant="secondary" onClick={onBack}><ArrowLeft size={16} /> Review fit</Button>
         </div>
 
-        <Panel className="p-5">
-          <div className="mb-5 grid grid-cols-3 gap-2">
+        <Panel className="folio-editor-panel p-5 sm:p-6">
+          <div className="folio-editor-topline"><span>RESUME DETAILS</span><span>EDITABLE DRAFT</span></div>
+          <div className="folio-template-picker mb-6 grid grid-cols-3 gap-2">
             {templates.map((item) => (
               <button
                 key={item.id}
                 onClick={() => setTemplate(item.id)}
-                className={`rounded-md border px-3 py-2 text-sm font-bold ${template === item.id ? 'border-ink bg-ink text-white' : 'border-slate-300 bg-white text-slate-700'}`}
+                className={`folio-template-option rounded-md border px-3 py-2 text-sm font-bold ${template === item.id ? 'folio-template-selected border-ink bg-ink text-white' : 'border-slate-300 bg-white text-slate-700'}`}
               >
                 {item.label}
               </button>
@@ -79,7 +81,8 @@ export default function BuilderPage({ workflow, updateWorkflow, onBack }) {
         </Panel>
       </section>
 
-      <section className="xl:sticky xl:top-4 xl:self-start">
+      <section className="folio-preview-column xl:sticky xl:top-5 xl:self-start">
+        <div className="folio-preview-heading"><div><p>LIVE PREVIEW</p><span>Updates as you edit</span></div><span className="folio-preview-size">A4</span></div>
         <ResumePreview resume={resume} template={template} />
       </section>
     </main>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FileText, LayoutDashboard, PenLine } from 'lucide-react';
+import { ArrowUpRight, FileText, LayoutDashboard, PenLine } from 'lucide-react';
 import HomePage from './pages/HomePage.jsx';
 import AnalysisPage from './pages/AnalysisPage.jsx';
 import BuilderPage from './pages/BuilderPage.jsx';
@@ -26,14 +26,14 @@ export default function App() {
   const updateWorkflow = (patch) => setWorkflow((current) => ({ ...current, ...patch }));
 
   return (
-    <div className="min-h-screen">
-      <header className="border-b border-slate-200 bg-white/85 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-river">Resume Studio</p>
-            <h1 className="text-xl font-bold text-ink">AI Resume Analyzer & Builder</h1>
-          </div>
-          <nav className="flex gap-2 overflow-x-auto">
+    <div className="folio-shell min-h-screen">
+      <header className="folio-header">
+        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
+          <a href="#" className="folio-brand" aria-label="Folio home">
+            <span className="folio-mark">f.</span>
+            <span><span className="folio-brand-name">folio</span><span className="folio-brand-note">CAREER WORKSHOP</span></span>
+          </a>
+          <nav className="folio-nav" aria-label="Resume workflow">
             {steps.map((step) => {
               const Icon = step.icon;
               const active = screen === step.id;
@@ -41,16 +41,17 @@ export default function App() {
                 <button
                   key={step.id}
                   onClick={() => setScreen(step.id)}
-                  className={`flex min-w-28 items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-semibold transition ${
-                    active ? 'border-ink bg-ink text-white' : 'border-slate-200 bg-white text-slate-600 hover:border-slate-400'
+                  className={`folio-step ${
+                    active ? 'folio-step-active' : ''
                   }`}
                 >
-                  <Icon size={16} />
+                  <Icon size={15} strokeWidth={1.8} />
                   {step.label}
                 </button>
               );
             })}
           </nav>
+          <a className="folio-help" href="mailto:hello@folio.local">A better next step <ArrowUpRight size={15} /></a>
         </div>
       </header>
 
