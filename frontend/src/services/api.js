@@ -24,15 +24,45 @@ export async function generateResume(payload) {
 }
 
 export async function downloadPdf(payload) {
-  const response = await api.post('/resumes/pdf', payload, { responseType: 'blob' });
-  const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = 'tailored-resume.pdf';
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  window.URL.revokeObjectURL(url);
+  try {
+    const response = await api.post('/resumes/pdf', payload, { responseType: 'blob' });
+    const pdfBlob = response.data;
+    const pdfHeader = await pdfBlob.slice(0, 5).text();
+    if (pdfHeader !== '%PDF-') {
+      let body = null;
+      try {
+        body = JSON.parse(await pdfBlob.text());
+      } catch {
+        // The response was neither a PDF nor a JSON API error.
+      }
+      const downloadError = new Error(body?.error?.message || 'The server returned an invalid PDF. Please try again.');
+      downloadError.response = { data: body || {} };
+      throw downloadError;
+    }
+
+    const url = window.URL.createObjectURL(new Blob([pdfBlob], { type: 'application/pdf' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'tailored-resume.pdf';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    // Let Chrome finish opening the blob URL before releasing it. Revoking it
+    // in the same tick as click() can produce an empty/corrupt downloaded PDF.
+    window.setTimeout(() => window.URL.revokeObjectURL(url), 60_000);
+  } catch (error) {
+    // Axios returns error bodies as blobs when responseType is "blob". Decode
+    // the JSON API error so the builder can show the backend's useful message.
+    const data = error?.response?.data;
+    if (data instanceof Blob) {
+      try {
+        error.response.data = JSON.parse(await data.text());
+      } catch {
+        // Keep the original Axios error when the body is not JSON.
+      }
+    }
+    throw error;
+  }
 }
 
 export function getErrorMessage(error) {

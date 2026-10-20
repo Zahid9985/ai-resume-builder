@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { ArrowLeft, Loader2, Wand2 } from 'lucide-react';
+import { ArrowLeft, Wand2 } from 'lucide-react';
 import Button from '../components/Button.jsx';
 import MetricCard from '../components/MetricCard.jsx';
 import Panel from '../components/Panel.jsx';
 import TagList from '../components/TagList.jsx';
+import ResumeGenerateLoader from '../components/ResumeGenerateLoader.jsx';
 import { generateResume, getErrorMessage } from '../services/api.js';
 
 function InsightBlock({ title, items, tone }) {
@@ -64,6 +65,8 @@ export default function AnalysisPage({ workflow, updateWorkflow, onBuild, onBack
   }
 
   return (
+    <>
+    {loading && <ResumeGenerateLoader />}
     <main className="folio-main folio-analysis mx-auto max-w-7xl px-5 py-8 lg:py-12">
       <div className="folio-page-heading mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
@@ -104,10 +107,11 @@ export default function AnalysisPage({ workflow, updateWorkflow, onBuild, onBack
       <div className="folio-analysis-footer mt-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p>Next: shape a tailored draft, then make it yours.</p>
         <Button variant="accent" onClick={handleGenerate} disabled={loading}>
-          {loading ? <Loader2 className="animate-spin" size={18} /> : <Wand2 size={18} />}
-          Generate Tailored Resume
+          <Wand2 size={18} />
+          {loading ? 'Generating Resume…' : 'Generate Tailored Resume'}
         </Button>
       </div>
     </main>
+    </>
   );
 }
