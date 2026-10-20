@@ -37,7 +37,7 @@ export async function downloadPdf(payload) {
 
 export function getErrorMessage(error) {
   if (error?.code === 'ERR_NETWORK' || (error?.request && !error?.response)) {
-    return 'Cannot reach the API. Start the backend on port 5000, restart the frontend on port 5173, and try again.';
+    return 'Cannot reach the API on port 5000. Start or restart the backend. Restart the frontend on port 5173 only if its Vite configuration changed.';
   }
   const apiError = error?.response?.data?.error;
   if (apiError?.debug) return apiError.debug;
