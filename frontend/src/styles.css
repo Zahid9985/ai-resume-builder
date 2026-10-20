@@ -13,6 +13,7 @@ body {
 .folio-shell { background: #f3f0e9; }
 .folio-header { border-bottom: 1px solid #dcd8ce; background: rgba(248, 246, 240, .92); }
 .folio-brand { display: flex; align-items: center; gap: 11px; color: #242a24; text-decoration: none; }
+.folio-brand-logo { width: 44px; height: 44px; flex: 0 0 auto; object-fit: contain; }
 .folio-mark { display: grid; width: 39px; height: 39px; place-items: center; background: #b84b35; color: #fff9ec; font: italic 700 26px Georgia, serif; }
 .folio-brand-name { display: block; font: 700 21px/1 Georgia, serif; letter-spacing: -.06em; }
 .folio-brand-note { display: block; margin-top: 4px; color: #77796e; font-size: 8px; font-weight: 700; letter-spacing: .17em; }

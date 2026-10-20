@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage.jsx';
 import AnalysisPage from './pages/AnalysisPage.jsx';
 import BuilderPage from './pages/BuilderPage.jsx';
 import { emptyResume } from './data/emptyResume.js';
+import applyWiseLogo from './applywise-logo.png';
 
 const steps = [
   { id: 'upload', label: 'Upload', icon: FileText },
@@ -29,9 +30,9 @@ export default function App() {
     <div className="folio-shell min-h-screen">
       <header className="folio-header">
         <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
-          <a href="#" className="folio-brand" aria-label="Folio home">
-            <span className="folio-mark">f.</span>
-            <span><span className="folio-brand-name">folio</span><span className="folio-brand-note">CAREER WORKSHOP</span></span>
+          <a href="#" className="folio-brand" aria-label="ApplyWise home">
+            <img src={applyWiseLogo} alt="" className="folio-brand-logo" />
+            <span><span className="folio-brand-name">ApplyWise</span><span className="folio-brand-note">AI RESUME WORKSHOP</span></span>
           </a>
           <nav className="folio-nav" aria-label="Resume workflow">
             {steps.map((step) => {

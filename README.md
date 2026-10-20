@@ -1,4 +1,4 @@
-# AI Resume Analyzer & Resume Builder
+# ApplyWise — AI Resume Analyzer & Resume Builder
 
 > A full-stack MERN application that analyzes a resume against a target job description, identifies fit gaps, generates a factual tailored resume with Google Gemini, and exports an editable ATS-friendly resume as a PDF.
 
