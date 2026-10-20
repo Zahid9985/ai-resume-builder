@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react';
-import { ArrowDown, Check, FileUp, Loader2, ScanSearch } from 'lucide-react';
+import { ArrowDown, Check, FileUp, ScanSearch } from 'lucide-react';
 import Button from '../components/Button.jsx';
 import Panel from '../components/Panel.jsx';
 import ResumeUploadLoader from '../components/ResumeUploadLoader.jsx';
+import ResumeAnalyzeLoader from '../components/ResumeAnalyzeLoader.jsx';
 import { analyzeResume, getErrorMessage, uploadResume } from '../services/api.js';
 
 export default function HomePage({ workflow, updateWorkflow, onComplete }) {
@@ -66,6 +67,7 @@ export default function HomePage({ workflow, updateWorkflow, onComplete }) {
   return (
     <>
     {uploading && <ResumeUploadLoader />}
+    {loading && <ResumeAnalyzeLoader />}
     <main className="folio-main mx-auto grid max-w-7xl gap-12 px-5 py-10 lg:grid-cols-[0.9fr_1.1fr] lg:py-16">
       <section className="folio-intro flex flex-col justify-center">
         <p className="folio-kicker"><span className="folio-kicker-dot" /> YOUR NEXT CHAPTER, WELL EDITED</p>
@@ -131,9 +133,9 @@ export default function HomePage({ workflow, updateWorkflow, onComplete }) {
 
         {error ? <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">{error}</p> : null}
 
-        <Button onClick={handleAnalyze} disabled={loading || !canAnalyze} className="mt-5 w-full">
-          {loading ? <Loader2 className="animate-spin" size={18} /> : <ScanSearch size={18} />}
-          Analyze Resume
+        <Button onClick={handleAnalyze} disabled={loading || !canAnalyze} className="mt-5 w-full" aria-busy={loading}>
+          <ScanSearch size={18} />
+          {loading ? 'Analyzing Resume…' : 'Analyze Resume'}
         </Button>
       </Panel>
     </main>
