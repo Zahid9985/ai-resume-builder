@@ -18,6 +18,25 @@ function validationError(name, parsed) {
   return new AppError(`${name} failed validation.`, 502, parsed.error.flatten());
 }
 
+function removeRequirementTextFromSkills(resume, resumeText) {
+  const requirementText = /missing\s+(job\s+)?requirements?|\bmandatory\b|\b(job|role)\s+requirements?\b|\b\d+\s*(to|[-–])\s*\d+\s+years?\b/i;
+  const sourceTerms = new Set(resumeText.toLowerCase().match(/[a-z0-9+#.]+/g) || []);
+  return {
+    ...resume,
+    skills: resume.skills
+      .filter((group) => !requirementText.test(group.category))
+      .map((group) => ({
+        ...group,
+        items: group.items.filter((item) => {
+          if (requirementText.test(item) || item.length > 90) return false;
+          const terms = item.toLowerCase().match(/[a-z0-9+#.]+/g) || [];
+          return terms.length > 0 && terms.every((term) => sourceTerms.has(term));
+        })
+      }))
+      .filter((group) => group.items.length > 0)
+  };
+}
+
 async function analyzeResumeWithAi({ resumeText, jobDescription }) {
   const deterministic = estimateMatchScore(resumeText, jobDescription);
   const prompt = `
@@ -78,9 +97,14 @@ Create a tailored ATS-friendly resume as JSON only. Use this exact shape:
 
 Rules:
 - Rewrite and reorder only verified resume information to better match the job.
-- Incorporate job keywords naturally when they truthfully fit the resume.
+- Put only concise, concrete skills explicitly demonstrated or named in the resume in the skills section.
+- Never put missing job requirements, years-of-experience requirements, qualifications the candidate lacks, or sentences copied from the job description in skills, summary, experience, projects, or additional sections.
+- A missing requirement belongs only in analysis; it must not be inserted into the generated resume. Do not create a "Missing Job Requirements" skill category or any similar category.
+- Treat the analysis context as guidance for relevance only. Its missing requirements are not candidate skills or resume content.
+- Include job-description keywords only when the resume independently supports the candidate having that skill or experience.
 - Do not add numbers or achievements unless the original resume contains them.
 - Leave unknown fields empty rather than guessing.
+- Keep the resume concise and prioritize the most relevant verified content. Use standard ATS section names and plain text content.
 
 Analysis context:
 ${JSON.stringify(analysis || {})}
@@ -97,7 +121,7 @@ Job description:
   const parsed = generatedResumeSchema.safeParse(json);
   if (!parsed.success) throw validationError('Generated resume response', parsed);
 
-  return parsed.data;
+  return removeRequirementTextFromSkills(parsed.data, resumeText);
 }
 
 module.exports = { analyzeResumeWithAi, generateTailoredResumeWithAi };

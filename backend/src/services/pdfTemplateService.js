@@ -26,7 +26,8 @@ function section(title, body) {
 
 function renderResumeHtml(resume, template = 'classic') {
   const accent = template === 'modern' ? '#0f766e' : template === 'compact' ? '#334155' : '#1d4ed8';
-  const density = template === 'compact' ? '10px' : '14px';
+  const compact = template === 'compact';
+  const density = compact ? '8px' : '10px';
   const links = resume.contact.links?.map(linkHtml).filter(Boolean).join(' | ');
   const contactLine = [
     resume.contact.email ? `<a href="mailto:${escapeHtml(resume.contact.email)}">${escapeHtml(resume.contact.email)}</a>` : '',
@@ -70,20 +71,20 @@ function renderResumeHtml(resume, template = 'classic') {
 <head>
   <meta charset="utf-8" />
   <style>
-    @page { size: A4; margin: 16mm; }
+    @page { size: A4; margin: 13mm 14mm; }
     * { box-sizing: border-box; }
-    body { color: #111827; font-family: Arial, Helvetica, sans-serif; font-size: 11px; line-height: 1.45; margin: 0; }
-    header { border-bottom: 2px solid ${accent}; padding-bottom: 10px; margin-bottom: ${density}; }
-    h1 { font-size: 25px; margin: 0 0 3px; letter-spacing: 0; }
-    .headline { color: ${accent}; font-size: 12px; font-weight: 700; margin-bottom: 5px; }
+    body { color: #111827; font-family: Arial, Helvetica, sans-serif; font-size: ${compact ? '9.5px' : '10px'}; line-height: 1.32; margin: 0; }
+    header { border-bottom: 2px solid ${accent}; padding-bottom: 7px; margin-bottom: ${density}; }
+    h1 { font-size: 22px; margin: 0 0 2px; letter-spacing: 0; }
+    .headline { color: ${accent}; font-size: 11px; font-weight: 700; margin-bottom: 3px; }
     .contact, .muted { color: #4b5563; }
-    h2 { color: ${accent}; font-size: 12px; margin: ${density} 0 6px; text-transform: uppercase; border-bottom: 1px solid #d1d5db; padding-bottom: 3px; letter-spacing: 0; }
-    p { margin: 0 0 6px; }
-    ul { margin: 4px 0 0 16px; padding: 0; }
-    li { margin-bottom: 3px; break-inside: avoid; }
+    h2 { color: ${accent}; font-size: 11px; margin: ${density} 0 4px; text-transform: uppercase; border-bottom: 1px solid #d1d5db; padding-bottom: 2px; letter-spacing: 0; break-after: avoid; }
+    p { margin: 0 0 4px; }
+    ul { margin: 3px 0 0 14px; padding: 0; }
+    li { margin-bottom: 2px; }
     a { color: #1d4ed8; text-decoration: none; }
-    section, .entry { break-inside: avoid; }
-    .entry { margin-bottom: 8px; }
+    section { break-inside: auto; }
+    .entry { break-inside: avoid; margin-bottom: 6px; }
     .row { align-items: baseline; display: flex; justify-content: space-between; gap: 16px; }
   </style>
 </head>
